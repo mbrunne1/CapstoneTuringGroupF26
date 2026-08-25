@@ -1,0 +1,47 @@
+networks:
+  nocobase:
+    driver: bridge
+
+services:
+  app:
+    image: nocobase/nocobase:latest-full
+    restart: always
+    networks:
+      - nocobase
+    depends_on:
+      - postgres
+    environment:
+      # Application secret key for generating user tokens, etc. Replace with your own random string
+      - APP_KEY=your-secret-key
+      # Database type: postgres, mysql, mariadb
+      - DB_DIALECT=postgres
+      # Database host
+      - DB_HOST=postgres
+      # Database port
+      - DB_PORT=5432
+      # Database name
+      - DB_DATABASE=nocobase
+      # Database user
+      - DB_USER=nocobase
+      # Database password
+      - DB_PASSWORD=nocobase
+      # Timezone
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./storage:/app/nocobase/storage
+    ports:
+      - "13000:80"
+
+  # If using an existing database, you can remove this postgres service
+  postgres:
+    image: postgres:16
+    restart: always
+    command: postgres -c wal_level=logical
+    environment:
+      POSTGRES_USER: nocobase
+      POSTGRES_DB: nocobase
+      POSTGRES_PASSWORD: nocobase
+    volumes:
+      - ./storage/db/postgres:/var/lib/postgresql/data
+    networks:
+      - nocobase
