@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Venue Clicker ERD</title>
+<style>
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    background: #ffffff;
+    padding: 40px;
+  }
+  .erd-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+  .entity {
+    border: 2px solid;
+    border-radius: 4px;
+    min-width: 220px;
+    overflow: hidden;
+  }
+  .entity-header {
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px;
+  }
+  .entity-row {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+
+  /* Venue = teal */
+  #venue { border-color: #0F6E56; background: #E1F5EE; }
+  #venue .entity-header { background: #9FE1CB; color: #04342C; }
+
+  /* Door = purple */
+  #door { border-color: #534AB7; background: #EEEDFE; }
+  #door .entity-header { background: #CECBF6; color: #26215C; }
+
+  /* Click Event = coral */
+  #click_event { border-color: #993C1D; background: #FAECE7; }
+  #click_event .entity-header { background: #F5C4B3; color: #4A1B0C; }
+
+  .connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+  }
+  .connector-line {
+    width: 100%;
+    height: 2px;
+    background: #5F5E5A;
+    position: relative;
+  }
+  .connector-label {
+    font-size: 12px;
+    color: #444441;
+    margin-bottom: 4px;
+  }
+  /* crow's foot "many" marker, drawn with borders */
+  .crowfoot {
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 10px solid #5F5E5A;
+  }
+</style>
+</head>
+<body>
+
+<div class="erd-container">
+
+  <div class="entity" id="venue">
+    <div class="entity-header">venue</div>
+    <div class="entity-row">id = int (PK)</div>
+    <div class="entity-row">name = string</div>
+    <div class="entity-row">current_amount = int (&ge; 0)</div>
+    <div class="entity-row">max_people = int</div>
+  </div>
+
+  <div class="connector">
+    <div class="connector-label">1&nbsp;&ndash;&nbsp;M</div>
+    <div style="display:flex; align-items:center; width:100%;">
+      <div class="connector-line"></div>
+      <div class="crowfoot"></div>
+    </div>
+  </div>
+
+  <div class="entity" id="door">
+    <div class="entity-header">door</div>
+    <div class="entity-row">id = int (PK)</div>
+    <div class="entity-row">name = string</div>
+    <div class="entity-row">venue_id = int (FK)</div>
+    <div class="entity-row">type = string (entrance/exit/2-way)</div>
+  </div>
+
+  <div class="connector">
+    <div class="connector-label">1&nbsp;&ndash;&nbsp;M</div>
+    <div style="display:flex; align-items:center; width:100%;">
+      <div class="connector-line"></div>
+      <div class="crowfoot"></div>
+    </div>
+  </div>
+
+  <div class="entity" id="click_event">
+    <div class="entity-header">click_event</div>
+    <div class="entity-row">id = int (PK)</div>
+    <div class="entity-row">door_id = int (FK)</div>
+    <div class="entity-row">direction = string</div>
+    <div class="entity-row">click_time = datetime</div>
+  </div>
+
+</div>
+
+</body>
+</html>
