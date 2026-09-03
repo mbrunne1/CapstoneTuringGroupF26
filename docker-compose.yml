@@ -28,7 +28,7 @@ services:
       # Timezone
       - TZ=Asia/Shanghai
     volumes:
-      - ./storage:/app/nocobase/storage
+      - ./nocobaseStorage:/app/nocobase/storage
     ports:
       - "13000:80"
 
@@ -42,6 +42,6 @@ services:
       POSTGRES_DB: nocobase
       POSTGRES_PASSWORD: nocobase
     volumes:
-      - ./storage/db/postgres:/var/lib/postgresql/data
+      - ./postgresStorage/db/postgres:/var/lib/postgresql/data
     networks:
       - nocobase
