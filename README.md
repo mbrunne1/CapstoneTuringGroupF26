@@ -1,13 +1,11 @@
 
 # NocoBase Docker Compose Installation
 
-This project runs **NocoBase** with **PostgreSQL** using Docker Compose. The assignment only requires getting NocoBase running.
+This project runs **NocoBase** with **PostgreSQL** using Docker Compose.
 
 ## Requirements
 
 Install Docker Desktop before starting. Docker Desktop includes Docker Engine and Docker Compose.
-
-You should be able to run the commands below from this project directory.
 
 ## Docker Compose basics
 
@@ -25,21 +23,34 @@ Tutorial: https://docs.docker.com/compose/gettingstarted/
 
 ## How to run NocoBase
 
+You should be able to run the commands below from this project directory.
+
+
 ### 1. Open a terminal
 
 Open PowerShell, Command Prompt, Terminal, or another shell.
 
-### 2. Change to the project directory
+### 2. Change to a new directory
 
-For example:
+Inside this directory, do: 
+    git clone https://github.com/mbrunne1/CapstoneTuringGroupF26.git
 
+    git checkout Sprint2DevelopmentJasonMittelstedt
 
-    1. cd C:\
-    2. cd DockerContains
-    3. cd nocobase1
+    git pull
+
+Now you have all the code from github for an empty nocobase app with Postgres.
+
+For the second assignment, you must unzip the submited file to get the storage directory.
+
+The storage directory has the app and the db information.
 
 
 ### 3. Start the system
+
+Make sure DockerDesktop is running.
+
+From the directory that has the file docker-compose.yml, start the app with the following command. 
 
 Run: docker compose up
 
@@ -64,7 +75,19 @@ Use these default credentials on the initial installation:
     2. Password: `admin123`
 
 
-Remember to change the default password after your first login if this installation will be used beyond the class/project environment.
+## Inspect the new data sources 
+
+    1. From the Gear Icon in the top right corner choose the data source dropdown 
+    2. On the far right click Configure
+    3. Look at the new collections Venue, Door, and Click_Event
+    4. Click on configure field to see the fields. 
+
+## Inspect the table Views 
+
+    1. The first view is the Venue collection
+    2. The second view is the Door collection
+    3. The thrid view is the Click_Event collection
+    
 
 ## Useful Docker Compose commands
 
