@@ -87,7 +87,7 @@ Use these default credentials on the initial installation:
     1. The first view is the Venue collection
     2. The second view is the Door collection
     3. The thrid view is the Click_Event collection
-    
+
 
 ## Useful Docker Compose commands
 
@@ -107,4 +107,5 @@ The PostgreSQL data is stored in the local `storage/` directory, so `docker comp
 
 
     - Docker Compose Quickstart: https://docs.docker.com/compose/gettingstarted/
-    - Chapter 1: Getting Started — Build a Working System in 5 Minutes: https://docs.nocobase.com/tutorials/v2/01-getting-started
+    - Getting Started: https://docs.nocobase.com/tutorials/v2/01-getting-started
+
