@@ -84,9 +84,10 @@ Use these default credentials on the initial installation:
 
 ## Inspect the table Views 
 
-    1. The first view is the Venue collection
-    2. The second view is the Door collection
-    3. The thrid view is the Click_Event collection
+    1. Select the Clicker Menu Item in the top left
+    2. Select Clicker Venues to see the venue data. 
+    3. Select Clicker Doors to see the door data.
+    4. Select Clicker Click_Event to see the click_event data.
 
 
 ## Useful Docker Compose commands
