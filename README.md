@@ -35,13 +35,13 @@ You should be able to run the commands below from this project directory.
 
 Open the "Turing Group" teams page in Teams.
 
-Go to the "Shared" tab and go into the most recent sprint folder (As of right now it is Sprint2).
+Go to the "Shared" tab and go into the most recent sprint folder (As of right now it is Sprint3).
 
-Download the Sprint2jasonMittelstedt.zip file and extract it to a folder that you can access.
+Download the Sprint3jasonMittelstedt.zip file and extract it to a folder that you can access.
 
 ### 2\. Open the terminal
 
-Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint2jasonMittelstedt.zip" and type "cmd".
+Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint3jasonMittelstedt.zip" and type "cmd".
 
 It should open a terminal and you need to verify that the directory location is within the said folder.
 
@@ -49,7 +49,7 @@ It should open a terminal and you need to verify that the directory location is 
 
 Make sure DockerDesktop is running.
 
-From the directory that has the file docker-compose.yml, start the app with the following command.
+From the directory that has the file compose.yml, start the app with the following command.
 
 Run: "docker compose up"
 
@@ -80,23 +80,26 @@ Use these default credentials on the initial installation:
 
 
 
-## Inspect the new data sources
+## Inspect the new and old data sources
 
 &#x20;   1. From the Gear Icon in the top right corner choose the data source dropdown
 2. On the far right click Configure
 3. Look at the new collections Venue, Door, and Click\_Event
 4. Click on configure field to see the fields.
+5. Look at the new SQL collections. They're used for the Manager View.
 
 
-
-## Inspect the table Views
+## Inspect the new table Views. The old views are labeled Sprint 2.
 
 &#x20;   1. Select the Clicker Menu Item in the top left
-2. Select Clicker Venues to see the venue data.
-3. Select Clicker Doors to see the door data.
-4. Select Clicker Click\_Event to see the click\_event data.
+2. Select Clicker EntryWay. This allows you to mark someone entered.
+3. Select Clicker ExitWay. This allows you to mark someone exited.
+4. Select Clicker Manager View to see the summary data.
 
-
+The EntryWay view is a table and a form filter. You can use the filter to look at a single door or view all the doors. 
+The Entered button creates a click_event with a direction of 1.
+The ExitWay works similarly. 
+The Manager View shows four tables. A total of all click_events entered, exited, and per-venue totals.
 
 ## Cleaning up
 
