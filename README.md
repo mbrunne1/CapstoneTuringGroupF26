@@ -37,11 +37,11 @@ Open the "Turing Group" teams page in Teams.
 
 Go to the "Shared" tab and go into the most recent sprint folder (As of right now it is Sprint2).
 
-Download the Sprint2jasonMittelstedt.zip file and extract it to a folder that you can access.
+Download the Sprint3matthewbrunner.zip file and extract it to a folder that you can access.
 
 ### 2\. Open the terminal
 
-Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint2jasonMittelstedt.zip" and type "cmd".
+Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint3matthewbrunner.zip" and type "cmd".
 
 It should open a terminal and you need to verify that the directory location is within the said folder.
 
