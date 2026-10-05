@@ -96,6 +96,14 @@ Use these default credentials on the initial installation:
 3. Select Clicker Doors to see the door data.
 4. Select Clicker Click\_Event to see the click\_event data.
 
+##inspect workflow 
+1. Go to Settings and click Workflow
+2. Inspect the configured components of the workflow
+
+
+## Inspect workflow tables 
+Ensure that the work shown is correct
+
 
 
 ## Cleaning up
