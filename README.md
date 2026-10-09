@@ -96,6 +96,14 @@ Use these default credentials on the initial installation:
 3. Select Clicker Doors to see the door data.
 4. Select Clicker Click\_Event to see the click\_event data.
 
+## Inspect Workflow
+1. Go to Settings and click Workflow
+2. Inspect the configured components of the workflow
+
+
+## Inspect workflow tables 
+Ensure that the work shown is correct
+
 
 
 ## Inspect the Entryway and Exitway pages
@@ -127,24 +135,9 @@ Use these default credentials on the initial installation:
 Close the page as normal in your browser, and make sure to run "docker compose down" in the cmd from earlier before closing it.
 
 
-
-
-
 ## Useful Docker Compose commands
 
-### Start
 
-
-
-docker compose up
-
-### Stop and remove the containers
-
-
-
-docker compose down
-
-The PostgreSQL data is stored in the local `storage/` directory, so `docker compose down` does not delete that project data.
 
 ## Sources
 
