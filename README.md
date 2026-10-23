@@ -157,6 +157,7 @@ The PostgreSQL data is stored in the local `storage/` directory, so `docker comp
 ## Instructions for Python/Selenium Testing
 
 In the first terminal window run the following command
+	
 	docker compose up
 
 In a second terminal window run the following two commands.   The first command should only have to be run one time. 
