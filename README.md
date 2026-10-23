@@ -1,11 +1,4 @@
-# Sprint 4 Instructions for Python/Selenium Testing
-
-In the first terminal window 
-	run docker compose up
-
-In a second terminal window 
-	run docker compose exec test-runner pip install pytest  This should only have to happen once.
-	run docker compose exec test-runner pytest -s
+# Sprint 4 See Instructions for Python/Selenium Testing below.
 
 # NocoBase Docker Compose Installation
 
@@ -156,8 +149,17 @@ The PostgreSQL data is stored in the local `storage/` directory, so `docker comp
 ## Sources
 
 
-
 &#x20;   - Docker Compose Quickstart: https://docs.docker.com/compose/gettingstarted/
 
 * Getting Started: https://docs.nocobase.com/tutorials/v2/01-getting-started
 
+
+## Instructions for Python/Selenium Testing
+
+In the first terminal window run the following command
+	docker compose up
+
+In a second terminal window run the following two commands.   The first command should only have to be run one time. 
+
+	docker compose exec test-runner pip install pytest  This should only have to happen once.
+	docker compose exec test-runner pytest -s
