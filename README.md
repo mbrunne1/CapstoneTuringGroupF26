@@ -156,11 +156,14 @@ The PostgreSQL data is stored in the local `storage/` directory, so `docker comp
 
 ## Instructions for Python/Selenium Testing
 
-In the first terminal window run the following command
+1. In the first terminal window run the following command
 	
 	docker compose up
 
-In a second terminal window run the following two commands.   The first command should only have to be run one time. 
+
+The selenium and python images will be downloaded so this may take a little while.
+
+2. In a second terminal window run the following two commands.   The first command should only have to be run one time. 
 
 	docker compose exec test-runner pip install pytest 
 	docker compose exec test-runner pytest -s
