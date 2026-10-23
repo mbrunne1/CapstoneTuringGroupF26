@@ -162,5 +162,5 @@ In the first terminal window run the following command
 
 In a second terminal window run the following two commands.   The first command should only have to be run one time. 
 
-	docker compose exec test-runner pip install pytest  This should only have to happen once.
+	docker compose exec test-runner pip install pytest 
 	docker compose exec test-runner pytest -s
