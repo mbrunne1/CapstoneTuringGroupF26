@@ -11,7 +11,7 @@ Install Docker Desktop before starting. Docker Desktop includes Docker Engine an
 I used the official Docker Compose Quickstart to review the basics:
 
 
-
+ 
 &#x20;   - A Compose file defines the services that make up an application.
 
 * `docker compose up` creates and starts the services.
@@ -35,13 +35,13 @@ You should be able to run the commands below from this project directory.
 
 Open the "Turing Group" teams page in Teams.
 
-Go to the "Shared" tab and go into the most recent sprint folder (As of right now it is Sprint2).
+Go to the "Shared" tab and go into the most recent sprint folder (As of right now it is Sprint4).
 
-Download the Sprint3matthewbrunner.zip file and extract it to a folder that you can access.
+Download the Sprint4matthewbrunner.zip file and extract it to a folder that you can access.
 
 ### 2\. Open the terminal
 
-Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint3matthewbrunner.zip" and type "cmd".
+Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint4matthewbrunner.zip" and type "cmd".
 
 It should open a terminal and you need to verify that the directory location is within the said folder.
 
@@ -103,7 +103,7 @@ Use these default credentials on the initial installation:
 &#x20;   1. Select Entryway in the top menu.
 2. Pick a Venue first, then pick one of that venue's Doors. The door list filters itself down to just that venue's doors once a venue is chosen.
 3. Direction defaults to "in" on Entryway and "out" on Exitway, so mostly you just pick venue, door, and submit.
-4. Submitting fires a workflow that looks up the door, then its venue, and adds or subtracts 1 from that venue's `Current\_Amount`. A "saved successfully" message confirms the submit, and the venue table on the page refreshes to show the updated count.
+4. Submitting fires a workflow that looks up the door, then its venue, and adds or subtracts 1 from that venue's `Current\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_Amount`. A "saved successfully" message confirms the submit, and the venue table on the page refreshes to show the updated count.
 5. Exitway works the same way, just subtracting instead of adding.
 
 ## Inspect the workflow
@@ -118,9 +118,47 @@ Use these default credentials on the initial installation:
 &#x20;   1. Select Manager in the top menu.
 2. It's set up as a group, so Venues, Door, and Click Events show as tabs on the left instead of across the top.
 3. These are read-only views for keeping an eye on current occupancy, doors, and recent click activity.
-4. Venue also has a Percentage Full column, calculated from `Current\_Amount` divided by `Max\_People`.
+4. Venue also has a Percentage Full column, calculated from `Current\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_Amount` divided by `Max\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_People`.
 
 
+
+## Testing using Selenium
+
+
+
+Open cmd as in the previous steps, in the project folder (the one containing `compose.yml`), with Docker Desktop running. Then run:
+
+
+
+&#x20;   docker compose --profile test run --rm tests
+
+
+
+The first run downloads the Selenium and Python images, so it takes a few minutes. A passing run ends with `6 passed`.
+
+
+
+The six tests sign in, open the Entryway page, record an entry, record an exit, submit an empty form, and open the Manager page. Tests 3 and 4 use the venue "UWG Coliseum" and add one Click\_Event row each run.
+
+
+
+If you desire to watch the tests run, or to see why one fails instead of passes, open http://localhost:7900 in a browser before starting the command and connect using the password "secret".
+
+
+
+If a run is stopped early with Ctrl+C, restart the test browser before the next run:
+
+
+
+&#x20;   docker compose --profile test restart selenium
+
+
+
+When finished, shut the test containers down:
+
+
+
+&#x20;   docker compose --profile test down
 
 ## Cleaning up
 
