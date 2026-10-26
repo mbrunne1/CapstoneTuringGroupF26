@@ -1,3 +1,5 @@
+# Sprint 4 See Instructions for Python/Selenium Testing below.
+
 # NocoBase Docker Compose Installation
 
 This project runs **NocoBase** with **PostgreSQL** using Docker Compose.
@@ -76,9 +78,7 @@ Use these default credentials on the initial installation:
 &#x20;   1. Email/Username: `admin@nocobase.com`
 2. Password: `admin123`
 
-
-
-
+	
 
 ## Inspect the new data sources
 
@@ -149,8 +149,21 @@ The PostgreSQL data is stored in the local `storage/` directory, so `docker comp
 ## Sources
 
 
-
 &#x20;   - Docker Compose Quickstart: https://docs.docker.com/compose/gettingstarted/
 
 * Getting Started: https://docs.nocobase.com/tutorials/v2/01-getting-started
 
+
+## Instructions for Python/Selenium Testing
+
+1. In the first terminal window run the following command
+	
+	docker compose up
+
+
+The selenium and python images will be downloaded so this may take a little while.
+
+2. In a second terminal window run the following two commands.   The first command should only have to be run one time. 
+
+	docker compose exec test-runner pip install pytest 
+	docker compose exec test-runner pytest -s

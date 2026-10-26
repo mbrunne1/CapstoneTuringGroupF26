@@ -7,7 +7,9 @@ services:
     image: nocobase/nocobase:latest-full
     restart: always
     networks:
-      - nocobase
+      nocobase:
+        aliases:
+          - nocobase
     depends_on:
       - postgres
     environment:
@@ -45,3 +47,29 @@ services:
       - ./storage/db/postgres:/var/lib/postgresql/data
     networks:
       - nocobase
+
+ # Selenium Browser Node
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    shm_size: 2gb # Crucial to prevent Chrome from crashing inside docker
+    networks:
+      - nocobase
+    ports:
+      - "4444:4444" # Selenium Hub endpoint
+      - "7900:7900" # VNC Web View to watch tests visually
+
+# Your Test Runner Environment (Python Example)
+  test-runner:
+    image: python:3.11-slim
+    networks:
+      - nocobase
+    volumes:
+      - ./tests:/tests
+    working_dir: /tests
+    environment:
+      - NOCOBASE_URL=http://nocobase:80
+      - SELENIUM_URL=http://selenium-chrome:4444/wd/hub
+    depends_on:
+      - app
+      - selenium-chrome
+    command: sh -c "pip install --root-user-action=ignore -r requirements.txt && tail -f /dev/null"
