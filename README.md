@@ -37,11 +37,11 @@ Open the "Turing Group" teams page in Teams.
 
 Go to the "Shared" tab and go into the most recent sprint folder (As of right now it is Sprint2).
 
-Download the Sprint3matthewbrunner.zip file and extract it to a folder that you can access.
+Download the Sprint2jasonMittelstedt.zip file and extract it to a folder that you can access.
 
 ### 2\. Open the terminal
 
-Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint3matthewbrunner.zip" and type "cmd".
+Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint2jasonMittelstedt.zip" and type "cmd".
 
 It should open a terminal and you need to verify that the directory location is within the said folder.
 
@@ -122,6 +122,7 @@ Use these default credentials on the initial installation:
 
 
 
+
 ## Cleaning up
 
 Close the page as normal in your browser, and make sure to run "docker compose down" in the cmd from earlier before closing it.
@@ -140,6 +141,13 @@ docker compose up
 
 ### Stop and remove the containers
 
+### Running The Endoto-end test
+preform unit test using selenium in the container
+
+1. open your web browser and type in the URL http://localhost:7900 htis will preform the test.
+2. once accesed type in the password: secret
+3. after this type in the terminal or window powershell : python testing_clicker.py
+4. after the tets are prefromed the statment will state "OK"
 
 
 docker compose down

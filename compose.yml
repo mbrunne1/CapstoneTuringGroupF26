@@ -45,3 +45,19 @@ services:
       - ./storage/db/postgres:/var/lib/postgresql/data
     networks:
       - nocobase
+
+  # Sprint 4:
+  # Sets Selenium Chrome for live test feed http://localhost:7900
+  # password: secret
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: clicker-selenium
+    restart: always
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    shm_size: '2gb'
+    networks:
+      - nocobase
+    depends_on:
+      - app
