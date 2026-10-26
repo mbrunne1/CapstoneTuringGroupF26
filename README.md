@@ -124,9 +124,13 @@ Use these default credentials on the initial installation:
 With the container running, open the test folder and access the test_clicker.py source file. 
 Once you've opened the file in an ide, Open the terminal and run the tests with the command:
 - pytest test_clicker.py
+
 From here, the tests should run in http://localhost:4444/ui/#
+
 Go there if you would like to watch the automated tests.
+
 Then back in the ide, all tests should succeed.
+
 From here just exit out of the file, and then type 'docker compose down' in the terminal. 
 
 
