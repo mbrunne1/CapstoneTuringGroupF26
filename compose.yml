@@ -11,11 +11,13 @@ services:
     depends_on:
       - postgres
     environment:
-      # Application secret key for generating user tokens, etc. Replace with your own random string
+      # Application key, used to generate user tokens, etc.
+      # If APP_KEY is changed, old tokens will become invalid
+      # Can be any random string, and ensure it is not leaked
       - APP_KEY=your-secret-key
-      # Database type: postgres, mysql, mariadb
+      # Database type, supports postgres, mysql, mariadb
       - DB_DIALECT=postgres
-      # Database host
+      # Database host, can be replaced with an existing database server IP
       - DB_HOST=postgres
       # Database port
       - DB_PORT=5432
@@ -25,14 +27,15 @@ services:
       - DB_USER=nocobase
       # Database password
       - DB_PASSWORD=nocobase
-      # Timezone
-      - TZ=Asia/Shanghai
-    volumes:
-      - ./storage/app:/app/nocobase/storage
-    ports:
-      - "13000:80"
+      # Timezone, please change it to your local timezone, e.g., America/New_York
+      - TZ=Etc/UTC
 
-  # If using an existing database, you can remove this postgres service
+    volumes:
+      - ./storage:/app/nocobase/storage
+    ports:
+      - '13000:80'
+    # init: true
+
   postgres:
     image: postgres:16
     restart: always
@@ -45,28 +48,3 @@ services:
       - ./storage/db/postgres:/var/lib/postgresql/data
     networks:
       - nocobase
-      
-  # Selenium Browser Node
-  selenium-chrome:
-    image: selenium/standalone-chrome:latest
-    shm_size: 2gb # Crucial to prevent Chrome from crashing inside docker
-    networks:
-      - nocobase
-    ports:
-      - "4444:4444" 
-      - "7900:7900" 
-
-  test-runner:
-    image: python:3.11-slim
-    networks:
-      - nocobase
-    volumes:
-      - ./tests:/tests
-    working_dir: /tests
-    environment:
-      - NOCOBASE_URL=http://host.docker.internal:13000
-      - SELENIUM_URL=http://selenium-chrome:4444/wd/hub
-    depends_on:
-      - app
-      - selenium-chrome
-    command: sh -c "pip install --root-user-action=ignore -r requirements.txt && tail -f /dev/null"
