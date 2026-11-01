@@ -1,0 +1,24 @@
+# Manager site http://localhost:8080
+# Doorman site http://localhost:8081
+
+
+
+{
+	auto_https off
+}
+
+# Manager site lets everything go through
+:8080 {
+	reverse_proxy app:80
+}
+
+# Doorman site blocks certain URLs. 
+:8081 {
+	# Protect the manager page.
+	redir /admin/wpjgq6ittgi /admin 307
+
+	# Protect the edit variables page.
+	redir /admin/eg8laht2nms /admin 307
+
+	reverse_proxy app:80
+}
