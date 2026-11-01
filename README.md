@@ -205,11 +205,11 @@ The nocobase user roles and security along with Caddy provides control over acce
 
 ```caddyfile
 {
-	auto\\\_https off
+	auto_https off
 }
 
 :8080, :8081 {
-	reverse\\\_proxy app:80
+	reverse_proxy app:80
 }
 ```
 
