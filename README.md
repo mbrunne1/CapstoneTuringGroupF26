@@ -232,7 +232,7 @@ The Nocobase application has fixed UIDs that can be redirected.
 	reverse_proxy app:80
 }
 
-# Doorman site blocks certain URLs. 
+# Doorman site redirects certain URLs. 
 :8081 {
 	# Protect the manager page.
 	redir /admin/wpjgq6ittgi /admin 307
