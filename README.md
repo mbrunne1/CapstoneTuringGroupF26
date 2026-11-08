@@ -193,14 +193,14 @@ To test this on a local machine, the Caddyfile in the project directory needs to
 
 To test how the application behaves for the outside world, select the rule below and comment out the other @outside.
 
-@outside not client_ip 111.11.1.1   # use this line to test the outside world
+@outside not client_ip 192.0.2.1   # use this line to test the outside world
 
 
 To test how the application behaves with a VPN or intranet, select the rule below and comment out the other @outside.
 You will have to find your local client_ip.   This can be done by looking in the docker log file when Caddy is running.
 The Caddyfile uses the "log" statement and you can search for "client_ip".
 
-@outside not client_ip 111.11.1.1   # use this line to test the outside world
+@outside not client_ip 172.18.0.1   # use this line to test the outside world
 
 
 ```caddyfile
