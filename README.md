@@ -162,88 +162,106 @@ The PostgreSQL data is stored in the local `storage/` directory, so `docker comp
 
 #### 
 
-#### Roles and Proxy Server
+#### Proxy Server Configuration
 
-The nocobase user roles and security along with Caddy provides control over access to the manager pages.
-
-1. Nocobase security protects routes and data sources.
-2. Caddy filters out certain urls by looking at the Nocobase UID.
+Nocobase no longer runs on port 13000,   The docker.yml file has been updated to give the port assignments to Caddy.  Caddy responds to localhost:8080.
 
 
+Caddy allows access to the entire Nocobase application for IP addresses specified in an allowed list inside the Caddyfile.  Unapproved IP addresses like the world wide web are only allowed access to certain parts of the application.
 
-##### Configure Member role
-
-1. Go to Settings -> Users \& Permissions -> Roles \& Permissions -> Member -> System
-
-&#x09;Ensure everything is unselected.
-
-2\. Go to Settings -> Users \& Permissions -> Roles \& Permissions -> Member -> Desktop routes
-
-&#x09;Only allow access to Entryway and Exitway. Also turnoff the new routes are allowed checkbox.
-
-3\. Go to Settings -> Users \& Permissions -> Roles \& Permissions -> Member -> Data sources
-
-&#x09;Click Configure for the Main row. Select the Action permissions tab. Set the Permission policy for click\_event, door, and venue to individual.
-
-4\. Click Configure on click\_event, door, and venue to set Add and View permissions. This role should be able to add click\_events and view doors and venues.
-
-
-
-##### Add Users
-
-
-
-1. Go to Settings -> Users \& Permissions ->  Users
-
-&#x09;Select Add new. Fill out the form. The phone is optional. All other fields are required.
-
-2\. In the Roles field set to member for a doorman, and set to member and admin for a manager.
 
 ##### Simplest Caddyfile configuration
 
 
-
 ```caddyfile
 {
 	auto_https off
 }
 
-:8080, :8081 {
-	reverse_proxy app:80
-}
-```
-
-The simple Caddyfile does not protect access to the URLs.
-
-The Nocobase application has fixed UIDs that can be redirected.
-
-```caddyfile
-# Manager site http://localhost:8080
-# Doorman site http://localhost:8081
-
-
-
-{
-	auto_https off
-}
-
-# Manager site lets everything go through
 :8080 {
 	reverse_proxy app:80
 }
+```
 
-# Doorman site redirects certain URLs. 
-:8081 {
-	# Protect the manager page.
-	redir /admin/wpjgq6ittgi /admin 307
+The simple Caddyfile does not protect access to the administrative URLs.
 
-	# Protect the edit variables page.
-	redir /admin/eg8laht2nms /admin 307
+The Nocobase application has fixed UIDs that can be controlled.  The approach used in the Caddyfile allows special 
+IP addresses to access the whole application.  Outside IP addresses that are not approved will only have access to 
+the Clicker App tabs and the data manager tabs.
 
-	reverse_proxy app:80
+```caddyfile
+# Nocobase site http://localhost:8080
+
+{
+	auto_https off
 }
+
+:8080 {
+	log
+
+	#@outside not client_ip 172.18.0.1  # use this line to test access behind a vpn or intranet
+	@outside not client_ip 111.11.1.1   # use this line to test the outside world
+
+	handle @outside {
+                # Allow-list: from outside the intranet/VPN only what is listed here is allowed; 
+                # everything else is refused.
+                # A trailing * matches anything after it (an id, a tab, a file name).
+
+         
+                @allowed {
+
+        		# The following rules were generated from Gemini searches and Google Chrome Debugger network tab inspection.
+
+			# Pages: sign-in, Entryway, Exitway and the Manager pages (Manager, Venues, Doors, Click Events)
+			path / /signin /admin
+			path /admin/idhm8x63sz0* /admin/gfcj4qrm7mf*
+			path /admin/ykwv3l7yzv5* /admin/wpjgq6ittgi* /admin/qdqd79fuosp* /admin/gigc1l2908l*
+
+			# All scripts and styles, plus static assets, icons and the live-update connection (no data)
+			path *.js *.css
+			path /assets/* /static/* /favicon.ico /favicon/* /ws
+			path /storage/uploads/* /files/*
+
+			# Signing in and loading the app
+			path /api/auth:* /api/authenticators:public*
+        		path  /api/aiSettings:public*
+			path /api/app:get* /api/pm:listEnabled /api/systemSettings:get /api/themeConfig:list
+			path /api/roles:check /api/desktopRoutes:listAccessible /api/collections:listMeta 
+        		path /api/dataSources:listEnabled
+			path /api/environmentVariables /api/asyncTasks:list /api/myInAppMessages:count 
+        		path /api/userWorkflowTasks:listMine
+			path /api/aiEmployees:listByUser /api/aiConversations:unreadCounts 
+        		path /api/blockTemplates:list /api/uiSchemaTemplates:list
+
+			# Page layouts (read only)
+			path /api/uiSchemas:get* /api/flowModels:find*
+
+			# Data for Entryway, Exitway and the Manager pages
+			path /api/venue:list /api/venue:get /api/door:list /api/door:get
+			path /api/click_event:create /api/click_event:list /api/click_event:get
+
+		}
+                handle @allowed {
+                        reverse_proxy app:80
+                }
+
+                # Everything else is refused
+                handle {
+                        respond "Only available from the intranet or VPN: {path}" 403
+                }
+        }
+
+	# If it's not outside, it's inside and gets all the traffic
+	handle {
+		reverse_proxy app:80
+	}
 ```
 
 
-###### Useful Commands
+##### Useful Commands
+
+###### Reload Caddyfile without restarting Caddy.
 docker compose exec -w /etc/caddy caddy caddy reload
+
+###### Completely restart Caddy
+docker compose restart caddy
