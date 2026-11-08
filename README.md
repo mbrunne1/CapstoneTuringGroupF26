@@ -1,4 +1,4 @@
-### Sprint 5 - See section on Roles and Proxy Server
+### Sprint 5 - See section on Proxy Server Configuration
 
 
 
