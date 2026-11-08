@@ -160,9 +160,9 @@ The PostgreSQL data is stored in the local `storage/` directory, so `docker comp
 
 
 
-#### 
+ 
 
-#### Proxy Server Configuration
+## Proxy Server Configuration
 
 Nocobase no longer runs on port 13000,   The docker.yml file has been updated to give the port assignments to Caddy.  Caddy responds to localhost:8080.
 
