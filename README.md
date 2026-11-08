@@ -272,10 +272,10 @@ The Caddyfile uses the "log" statement and you can search for "client_ip".
 ```
 
 
-##### Useful Commands
+#### Useful Commands
 
-###### Reload Caddyfile without restarting Caddy.
-docker compose exec -w /etc/caddy caddy caddy reload
+##### Reload Caddyfile without restarting Caddy.
+	docker compose exec -w /etc/caddy caddy caddy reload
 
-###### Completely restart Caddy
-docker compose restart caddy
+##### Completely restart Caddy
+	docker compose restart caddy
