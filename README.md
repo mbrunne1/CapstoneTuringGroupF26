@@ -214,7 +214,7 @@ The Caddyfile uses the "log" statement and you can search for "client_ip".
 	log
 
 	#@outside not client_ip 172.18.0.1  # use this line to test access behind a vpn or intranet
-	@outside not client_ip 111.11.1.1   # use this line to test the outside world
+	@outside not client_ip 192.0.2.1   # use this line to test the outside world
 
 	handle @outside {
                 # Allow-list: from outside the intranet/VPN only what is listed here is allowed; 
