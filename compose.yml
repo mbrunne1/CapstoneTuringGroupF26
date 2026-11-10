@@ -11,13 +11,11 @@ services:
     depends_on:
       - postgres
     environment:
-      # Application key, used to generate user tokens, etc.
-      # If APP_KEY is changed, old tokens will become invalid
-      # Can be any random string, and ensure it is not leaked
+      # Application secret key for generating user tokens, etc. Replace with your own random string
       - APP_KEY=your-secret-key
-      # Database type, supports postgres, mysql, mariadb
+      # Database type: postgres, mysql, mariadb
       - DB_DIALECT=postgres
-      # Database host, can be replaced with an existing database server IP
+      # Database host
       - DB_HOST=postgres
       # Database port
       - DB_PORT=5432
@@ -27,15 +25,28 @@ services:
       - DB_USER=nocobase
       # Database password
       - DB_PASSWORD=nocobase
-      # Timezone, please change it to your local timezone, e.g., America/New_York
-      - TZ=Etc/UTC
-
+      # Timezone
+      - TZ=Asia/Shanghai
     volumes:
-      - ./storage:/app/nocobase/storage
+      - ./storage/app:/app/nocobase/storage
+    #ports:
+    #  - "13000:80"  There is no access for nocobase from port 13000
+  caddy:
+    image: caddy:2
+    restart: always
+    networks:
+      - nocobase
+    depends_on: 
+      - app
     ports:
-      - '13000:80'
-    # init: true
+      - "8080:8080"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./storage/caddy/data:/data
+      - ./storage/caddy/config:/config
 
+
+  # If using an existing database, you can remove this postgres service
   postgres:
     image: postgres:16
     restart: always

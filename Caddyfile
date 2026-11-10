@@ -1,0 +1,66 @@
+# Nocobase site http://localhost:8080
+
+{
+	auto_https off
+}
+
+:8080 {
+	log
+
+	@outside not client_ip 172.18.0.1  # use this line to test access behind a vpn or intranet
+	#@outside not client_ip 192.0.2.1   # use this line to test the outside world
+
+	handle @outside {
+                # Allow-list: from outside the intranet/VPN only what is listed here is allowed; 
+                # everything else is refused.
+                # A trailing * matches anything after it (an id, a tab, a file name).
+
+         
+                @allowed {
+
+        		# The following rules were generated from Gemini searches and Google Chrome Debugger network tab inspection.
+
+			# Pages: sign-in, Entryway, Exitway and the Manager pages (Manager, Venues, Doors, Click Events)
+			path / /signin /admin
+			path /admin/idhm8x63sz0* /admin/gfcj4qrm7mf*
+			path /admin/ykwv3l7yzv5* /admin/wpjgq6ittgi* /admin/qdqd79fuosp* /admin/gigc1l2908l*
+
+			# All scripts and styles, plus static assets, icons and the live-update connection (no data)
+			path *.js *.css
+			path /assets/* /static/* /favicon.ico /favicon/* /ws
+			path /storage/uploads/* /files/*
+
+			# Signing in and loading the app
+			path /api/auth:* /api/authenticators:public*
+        		path  /api/aiSettings:public*
+			path /api/app:get* /api/pm:listEnabled /api/systemSettings:get /api/themeConfig:list
+			path /api/roles:check /api/desktopRoutes:listAccessible /api/collections:listMeta 
+        		path /api/dataSources:listEnabled
+			path /api/environmentVariables /api/asyncTasks:list /api/myInAppMessages:count 
+        		path /api/userWorkflowTasks:listMine
+			path /api/aiEmployees:listByUser /api/aiConversations:unreadCounts 
+        		path /api/blockTemplates:list /api/uiSchemaTemplates:list
+
+			# Page layouts (read only)
+			path /api/uiSchemas:get* /api/flowModels:find*
+
+			# Data for Entryway, Exitway and the Manager pages
+			path /api/venue:list /api/venue:get /api/door:list /api/door:get
+			path /api/click_event:create /api/click_event:list /api/click_event:get
+
+		}
+                handle @allowed {
+                        reverse_proxy app:80
+                }
+
+                # Everything else is refused
+                handle {
+                        respond "Only available from the intranet or VPN: {path}" 403
+                }
+        }
+
+	# If it's not outside, it's inside and gets all the traffic
+	handle {
+		reverse_proxy app:80
+	}
+}

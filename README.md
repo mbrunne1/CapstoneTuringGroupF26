@@ -1,3 +1,7 @@
+### Sprint 5 - See section on Proxy Server Configuration
+
+
+
 # NocoBase Docker Compose Installation
 
 This project runs **NocoBase** with **PostgreSQL** using Docker Compose.
@@ -37,11 +41,11 @@ Open the "Turing Group" teams page in Teams.
 
 Go to the "Shared" tab and go into the most recent sprint folder (As of right now it is Sprint2).
 
-Download the Sprint3matthewbrunner.zip file and extract it to a folder that you can access.
+Download the Sprint2jasonMittelstedt.zip file and extract it to a folder that you can access.
 
 ### 2\. Open the terminal
 
-Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint3matthewbrunner.zip" and type "cmd".
+Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint2jasonMittelstedt.zip" and type "cmd".
 
 It should open a terminal and you need to verify that the directory location is within the said folder.
 
@@ -103,7 +107,7 @@ Use these default credentials on the initial installation:
 &#x20;   1. Select Entryway in the top menu.
 2. Pick a Venue first, then pick one of that venue's Doors. The door list filters itself down to just that venue's doors once a venue is chosen.
 3. Direction defaults to "in" on Entryway and "out" on Exitway, so mostly you just pick venue, door, and submit.
-4. Submitting fires a workflow that looks up the door, then its venue, and adds or subtracts 1 from that venue's `Current\_Amount`. A "saved successfully" message confirms the submit, and the venue table on the page refreshes to show the updated count.
+4. Submitting fires a workflow that looks up the door, then its venue, and adds or subtracts 1 from that venue's `Current\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_Amount`. A "saved successfully" message confirms the submit, and the venue table on the page refreshes to show the updated count.
 5. Exitway works the same way, just subtracting instead of adding.
 
 ## Inspect the workflow
@@ -118,7 +122,7 @@ Use these default credentials on the initial installation:
 &#x20;   1. Select Manager in the top menu.
 2. It's set up as a group, so Venues, Door, and Click Events show as tabs on the left instead of across the top.
 3. These are read-only views for keeping an eye on current occupancy, doors, and recent click activity.
-4. Venue also has a Percentage Full column, calculated from `Current\_Amount` divided by `Max\_People`.
+4. Venue also has a Percentage Full column, calculated from `Current\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_Amount` divided by `Max\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_People`.
 
 
 
@@ -154,3 +158,124 @@ The PostgreSQL data is stored in the local `storage/` directory, so `docker comp
 
 * Getting Started: https://docs.nocobase.com/tutorials/v2/01-getting-started
 
+
+
+ 
+
+## Proxy Server Configuration
+
+Nocobase no longer runs on port 13000,   The docker.yml file has been updated to give the port assignments to Caddy.  Caddy responds to localhost:8080.
+
+
+Caddy allows access to the entire Nocobase application for IP addresses specified in an allowed list inside the Caddyfile.  Unapproved IP addresses like the world wide web are only allowed access to certain parts of the application.
+
+
+##### Simplest Caddyfile configuration
+
+
+```caddyfile
+{
+	auto_https off
+}
+
+:8080 {
+	reverse_proxy app:80
+}
+```
+
+The simple Caddyfile does not protect access to the administrative URLs.
+
+The Nocobase application has fixed UIDs that can be controlled.  The approach used in the Caddyfile allows special 
+IP addresses to access the whole application.  Outside IP addresses that are not approved will only have access to 
+the Clicker App tabs and the data manager tabs.
+
+To test this on a local machine, the Caddyfile in the project directory needs to be edited.  
+
+To test how the application behaves for the outside world, select the rule below and comment out the other @outside.
+
+@outside not client_ip 192.0.2.1   # use this line to test the outside world
+
+
+To test how the application behaves with a VPN or intranet, select the rule below and comment out the other @outside.
+You will have to find your local client_ip.   This can be done by looking in the docker log file when Caddy is running.
+The Caddyfile uses the "log" statement and you can search for "client_ip".
+
+@outside not client_ip 172.18.0.1   # use this line to test the outside world
+
+
+```caddyfile
+# Nocobase site http://localhost:8080
+
+{
+	auto_https off
+}
+
+:8080 {
+	log
+
+	#@outside not client_ip 172.18.0.1  # use this line to test access behind a vpn or intranet
+	@outside not client_ip 192.0.2.1   # use this line to test the outside world
+
+	handle @outside {
+                # Allow-list: from outside the intranet/VPN only what is listed here is allowed; 
+                # everything else is refused.
+                # A trailing * matches anything after it (an id, a tab, a file name).
+
+         
+                @allowed {
+
+        		# The following rules were generated from Gemini searches and Google Chrome Debugger network tab inspection.
+
+			# Pages: sign-in, Entryway, Exitway and the Manager pages (Manager, Venues, Doors, Click Events)
+			path / /signin /admin
+			path /admin/idhm8x63sz0* /admin/gfcj4qrm7mf*
+			path /admin/ykwv3l7yzv5* /admin/wpjgq6ittgi* /admin/qdqd79fuosp* /admin/gigc1l2908l*
+
+			# All scripts and styles, plus static assets, icons and the live-update connection (no data)
+			path *.js *.css
+			path /assets/* /static/* /favicon.ico /favicon/* /ws
+			path /storage/uploads/* /files/*
+
+			# Signing in and loading the app
+			path /api/auth:* /api/authenticators:public*
+        		path  /api/aiSettings:public*
+			path /api/app:get* /api/pm:listEnabled /api/systemSettings:get /api/themeConfig:list
+			path /api/roles:check /api/desktopRoutes:listAccessible /api/collections:listMeta 
+        		path /api/dataSources:listEnabled
+			path /api/environmentVariables /api/asyncTasks:list /api/myInAppMessages:count 
+        		path /api/userWorkflowTasks:listMine
+			path /api/aiEmployees:listByUser /api/aiConversations:unreadCounts 
+        		path /api/blockTemplates:list /api/uiSchemaTemplates:list
+
+			# Page layouts (read only)
+			path /api/uiSchemas:get* /api/flowModels:find*
+
+			# Data for Entryway, Exitway and the Manager pages
+			path /api/venue:list /api/venue:get /api/door:list /api/door:get
+			path /api/click_event:create /api/click_event:list /api/click_event:get
+
+		}
+                handle @allowed {
+                        reverse_proxy app:80
+                }
+
+                # Everything else is refused
+                handle {
+                        respond "Only available from the intranet or VPN: {path}" 403
+                }
+        }
+
+	# If it's not outside, it's inside and gets all the traffic
+	handle {
+		reverse_proxy app:80
+	}
+```
+
+
+#### Useful Commands
+
+##### Reload Caddyfile without restarting Caddy.
+	docker compose exec -w /etc/caddy caddy caddy reload
+
+##### Completely restart Caddy
+	docker compose restart caddy
