@@ -60,10 +60,10 @@ The first startup can take a few minutes because Docker needs to download the No
 Leave this terminal running. The assignment specifically requires that the system work with `docker compose up`.
 
 
+(If using Sprint 5 skip to bottom to access webpage through Envoy Proxy)
+### 4\. Open NocoBase 
 
-### 4\. Open NocoBase
-
-Open a web browser and go to: http://localhost:13000
+(Open a web browser and go to: http://localhost:13000) - follow Envoy instructions then comeback. 
 
 NocoBase should display its login page.
 
@@ -120,14 +120,36 @@ Use these default credentials on the initial installation:
 3. These are read-only views for keeping an eye on current occupancy, doors, and recent click activity.
 4. Venue also has a Percentage Full column, calculated from `Current\_Amount` divided by `Max\_People`.
 
+## Testing using Selenium
+With the container running, open the test folder and access the test_clicker.py source file. 
+Once you've opened the file in an ide, Open the terminal and run the tests with the command:
+- pytest test_clicker.py
+
+From here, the tests should run in http://localhost:4444/ui/#
+
+Go there if you would like to watch the automated tests.
+
+Then back in the ide, all tests should succeed.
+
+From here just exit out of the file, and then type 'docker compose down' in the terminal. 
+
+
+## If Using Envoy as Open Source Proxy Server
+
+&#x20; in Docker Compose, open the folder with in the terminal and execute the prompt: docker compose up -d
+
+Once the Envoy Proxy image (envoyproxy/envoy:v1.32-latest) is properly downloaded you can continue. 
+
+From here there should be two different ports you can enter:
+- http://localhost:8080 - this is the public server that supports work-from-home access. Here, a user is only allowed read-only access to data with no data manipulation capacity.
+- http://localhost:8081 = this is the admin server that supports administrator data collection and keeping. Here, the user can change around and manipulate the pages data values. 
+
+For the purposes of manipulating data use the 8081 port to continue on. 
 
 
 ## Cleaning up
 
 Close the page as normal in your browser, and make sure to run "docker compose down" in the cmd from earlier before closing it.
-
-
-
 
 
 ## Useful Docker Compose commands
@@ -147,10 +169,3 @@ docker compose down
 The PostgreSQL data is stored in the local `storage/` directory, so `docker compose down` does not delete that project data.
 
 ## Sources
-
-
-
-&#x20;   - Docker Compose Quickstart: https://docs.docker.com/compose/gettingstarted/
-
-* Getting Started: https://docs.nocobase.com/tutorials/v2/01-getting-started
-
