@@ -37,11 +37,11 @@ Open the "Turing Group" teams page in Teams.
 
 Go to the "Shared" tab and go into the most recent sprint folder (As of right now it is Sprint2).
 
-Download the Sprint3matthewbrunner.zip file and extract it to a folder that you can access.
+Download the Sprint2jasonMittelstedt.zip file and extract it to a folder that you can access.
 
 ### 2\. Open the terminal
 
-Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint3matthewbrunner.zip" and type "cmd".
+Inside this folder, click on the address bar (it should look something like "Users->Desktop->Sprint2jasonMittelstedt.zip" and type "cmd".
 
 It should open a terminal and you need to verify that the directory location is within the said folder.
 
@@ -120,7 +120,34 @@ Use these default credentials on the initial installation:
 3. These are read-only views for keeping an eye on current occupancy, doors, and recent click activity.
 4. Venue also has a Percentage Full column, calculated from `Current\_Amount` divided by `Max\_People`.
 
+## Sprint 4 Testing 
+### Running The Endoto-end test
+preform unit test using selenium in the container
 
+1. open your web browser and type in the URL http://localhost:7900 htis will preform the test.
+2. once accesed type in the password: secret
+3. after this type in the terminal or window powershell : python Test/testing_clicker.py
+4. after the tets are prefromed the statment will state "OK"
+5. Tyhe live feed will try the test
+
+
+## sprint 5 proxy server setup
+## Using Squid!
+server is changed to squids proxy server
+ ## public access setup
+1.Open Chrome and go to http://localhost:8080
+2. login username :admin@nocobase.com 
+Password : admin123
+3. explore the webpage through the costomer/ vistitor lens
+##check 
+4. Try going to `http://localhost:8080/admin/settings - it will block access
+
+##Using squid Proxy Server port is 3128
+1.Open Windows Settings -> Network & internet -> Proxy, turn on proxy server
+2. set the IP to 127.0.0.1 and port to 3128 and hit Save.
+3. Open Chrome and go to http://clicker.intranet.test:8080/admin/settings.
+4. check all the editable functions inside the server
+5. when done dont forget to turn the proxy server off
 
 ## Cleaning up
 
@@ -147,7 +174,6 @@ docker compose down
 The PostgreSQL data is stored in the local `storage/` directory, so `docker compose down` does not delete that project data.
 
 ## Sources
-
 
 
 &#x20;   - Docker Compose Quickstart: https://docs.docker.com/compose/gettingstarted/

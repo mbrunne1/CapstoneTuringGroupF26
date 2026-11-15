@@ -1,7 +1,5 @@
 networks:
-  nocobase:
-    driver: bridge
-  wfh:
+  nocobase-net:
     driver: bridge
 
 services:
@@ -9,31 +7,23 @@ services:
     image: nocobase/nocobase:latest-full
     restart: always
     networks:
-      - nocobase
+      nocobase-net:
+        aliases:
+          - clicker.intranet.local
     depends_on:
       - postgres
     environment:
-      # Application secret key for generating user tokens, etc. Replace with your own random string
       - APP_KEY=your-secret-key
-      # Database type: postgres, mysql, mariadb
       - DB_DIALECT=postgres
-      # Database host
       - DB_HOST=postgres
-      # Database port
       - DB_PORT=5432
-      # Database name
       - DB_DATABASE=nocobase
-      # Database user
       - DB_USER=nocobase
-      # Database password
       - DB_PASSWORD=nocobase
-      # Timezone
-      - TZ=America/New_York
+      - TZ=Asia/Shanghai
     volumes:
       - ./storage/app:/app/nocobase/storage
-    # No ports here on purpose: the proxy below is the only way in.
 
-  # If using an existing database, you can remove this postgres service
   postgres:
     image: postgres:16
     restart: always
@@ -45,91 +35,18 @@ services:
     volumes:
       - ./storage/db/postgres:/var/lib/postgresql/data
     networks:
-      - nocobase
+      - nocobase-net
 
-  # ---- Sprint 5: Nginx reverse proxy ----
-  # Public door   http://localhost:8080  (anyone; configuration changes are refused)
-  # Intranet door http://localhost:8081  (this computer only; no restrictions)
-  proxy:
-    image: nginx:1.27-alpine
+  squid:
+    image: ubuntu/squid:latest
+    container_name: squid-proxy
     restart: always
+    ports:
+      - "8080:8080"
+      - "3128:3128"
+    volumes:
+      - ./squid.conf:/etc/squid/squid.conf:ro
     networks:
-      - nocobase
+      - nocobase-net
     depends_on:
       - app
-    ports:
-      - "8080:80"
-      - "127.0.0.1:8081:8081"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/snippets:/etc/nginx/snippets:ro
-
-  # ---- Sprint 5: work-from-home network (only starts with the "wfh" profile) ----
-  # The home browser lives on its own "wfh" network and cannot see NocoBase or the
-  # proxy directly. The only path to the intranet door is through this gateway, which
-  # stands in for the VPN: it sits on both networks and forwards port 8081 to the proxy.
-  vpn:
-    image: alpine/socat:latest
-    profiles: ["wfh"]
-    restart: always
-    command: TCP-LISTEN:8081,fork,reuseaddr TCP:proxy:8081
-    depends_on:
-      - proxy
-    networks:
-      - nocobase
-      - wfh
-
-  # A real Chromium browser, used from http://localhost:3000, that sits on the home network.
-  home-browser:
-    image: lscr.io/linuxserver/chromium:latest
-    profiles: ["wfh"]
-    restart: "no"
-    shm_size: "1gb"
-    security_opt:
-      - seccomp:unconfined
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
-      - CHROME_CLI=http://vpn:8081
-    ports:
-      - "3000:3000"
-    networks:
-      - wfh
-
-  # ---- Sprint 4: end-to-end testing ----
-  # Both services below only start when the "test" profile is enabled, so a plain
-  # `docker compose up` still runs just NocoBase, PostgreSQL and the proxy.
-
-  # A real browser (Chromium) that the tests drive over the WebDriver protocol.
-  # Watch it live at http://localhost:7900 (password: secret) while tests run.
-  selenium:
-    image: selenium/standalone-chromium:latest
-    profiles: ["test"]
-    restart: "no"
-    shm_size: 2gb
-    networks:
-      - nocobase
-    ports:
-      - "4444:4444"
-      - "7900:7900"
-
-  # Runs the Python/pytest tests in ./tests against NocoBase through the proxy's public door.
-  tests:
-    image: python:3.12-slim
-    working_dir: /tests
-    command: sh -c "pip install -q selenium pytest && pytest -v"
-    profiles: ["test"]
-    networks:
-      - nocobase
-    depends_on:
-      - app
-      - selenium
-    environment:
-      # The tests go through the public door of the proxy (host port 8080)
-      - BASE_URL=http://host.docker.internal:8080
-      - SELENIUM_URL=http://selenium:4444
-      - NOCOBASE_USER=admin@nocobase.com
-      - NOCOBASE_PASSWORD=admin123
-    volumes:
-      - ./tests:/tests
